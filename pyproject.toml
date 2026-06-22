@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pokerbench-ng"
+version = "0.1.0"
+description = "Clean-room local-first benchmark for AI poker agents"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "bmendonca3" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+pokerbench-ng = "pokerbench_ng.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

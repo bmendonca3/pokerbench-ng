@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokerbench-ng.local/schemas/metrics.schema.json",
+  "title": "PokerBench-NG Metrics",
+  "type": "object",
+  "required": ["schema_version", "benchmark_version", "summary"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "benchmark_version": { "type": "string" },
+    "summary": { "type": "object" }
+  }
+}
+

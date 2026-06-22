@@ -1,0 +1,7 @@
+schema_version: "1.0"
+agent:
+  name: "ModelOnlyAgent"
+  version: "0.0.1"
+  track_class: "model_only"
+  entrypoint: "model-only prompt.md"
+

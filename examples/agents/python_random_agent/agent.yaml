@@ -1,0 +1,7 @@
+schema_version: "1.0"
+agent:
+  name: "PythonRandomAgent"
+  version: "0.0.1"
+  track_class: "agent"
+  entrypoint: "python agent.py"
+

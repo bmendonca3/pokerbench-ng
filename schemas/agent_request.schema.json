@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokerbench-ng.local/schemas/agent_request.schema.json",
+  "title": "PokerBench-NG AgentRequest",
+  "type": "object",
+  "required": ["schema_version", "request_id", "legal_actions"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "request_id": { "type": "string" },
+    "legal_actions": {
+      "type": "array",
+      "items": { "$ref": "./legal_action.schema.json" },
+      "minItems": 1
+    }
+  }
+}
+

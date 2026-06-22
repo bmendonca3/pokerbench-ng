@@ -1,0 +1,2 @@
+"""Static spot evaluation."""
+

@@ -1,0 +1,33 @@
+{
+  "benchmark_version": "0.1.0",
+  "details": [
+    {
+      "best_action": {
+        "type": "call"
+      },
+      "best_ev_bb": 1.42,
+      "blunder": true,
+      "chosen_action": {
+        "type": "fold"
+      },
+      "chosen_ev_bb": 0.0,
+      "ev_loss_bb": 1.42,
+      "exact_action_agreement": false,
+      "illegal": false,
+      "malformed": false,
+      "near_best_agreement": false,
+      "spot_id": "public_dev_000001"
+    }
+  ],
+  "schema_version": "1.0",
+  "summary": {
+    "blunder_rate": 1.0,
+    "exact_action_agreement": 0.0,
+    "illegal_action_rate": 0.0,
+    "malformed_rate": 0.0,
+    "near_best_agreement": 0.0,
+    "static_ev_loss_bb_per_decision": 1.42,
+    "static_spots": 1
+  },
+  "track": "static_hunl_dev"
+}

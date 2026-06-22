@@ -1,0 +1,6 @@
+schema_version: "1.0"
+suite: "mvp_hunl_rollout"
+ruleset: "hunl_100bb_v1"
+hands: "1000"
+seed_manifest: "src/pokerbench_ng/data/public_seed_manifests/hunl_100bb_mvp.example.json"
+

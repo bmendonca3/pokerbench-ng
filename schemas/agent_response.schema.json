@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokerbench-ng.local/schemas/agent_response.schema.json",
+  "title": "PokerBench-NG AgentResponse",
+  "type": "object",
+  "required": ["schema_version", "request_id", "action"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "request_id": { "type": "string" },
+    "action": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["fold", "check", "call", "bet", "raise", "all_in"] },
+        "amount_to_bb": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  }
+}
+

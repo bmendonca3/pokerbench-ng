@@ -1,0 +1,332 @@
+{
+  "benchmark_version": "0.1.0",
+  "hands_detail": [
+    {
+      "action_count": 1,
+      "board": [],
+      "events": [
+        {
+          "action": {
+            "type": "fold"
+          },
+          "classification": "ok",
+          "index": 0,
+          "seat": "SB",
+          "street": "preflop"
+        }
+      ],
+      "hand_id": "h_000000000001",
+      "net_bb": {
+        "agent": -0.5,
+        "opponent": 0.5
+      },
+      "seed": 1,
+      "terminal_reason": "fold"
+    },
+    {
+      "action_count": 11,
+      "board": [
+        "3c",
+        "3h",
+        "As",
+        "8h",
+        "7h"
+      ],
+      "events": [
+        {
+          "action": {
+            "amount_to_bb": 0.5,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 0,
+          "seat": "SB",
+          "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 1,
+          "seat": "BB",
+          "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 2,
+          "seat": "BB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 3,
+          "seat": "SB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 4,
+          "seat": "BB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 5,
+          "seat": "BB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 6,
+          "seat": "SB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 7,
+          "seat": "BB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 8,
+          "seat": "BB",
+          "street": "river"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 9,
+          "seat": "SB",
+          "street": "river"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 10,
+          "seat": "BB",
+          "street": "river"
+        }
+      ],
+      "hand_id": "h_000000000002",
+      "net_bb": {
+        "agent": -4.0,
+        "opponent": 4.0
+      },
+      "seed": 2,
+      "terminal_reason": "showdown"
+    },
+    {
+      "action_count": 1,
+      "board": [],
+      "events": [
+        {
+          "action": {
+            "type": "fold"
+          },
+          "classification": "ok",
+          "index": 0,
+          "seat": "SB",
+          "street": "preflop"
+        }
+      ],
+      "hand_id": "h_000000000003",
+      "net_bb": {
+        "agent": -0.5,
+        "opponent": 0.5
+      },
+      "seed": 3,
+      "terminal_reason": "fold"
+    },
+    {
+      "action_count": 1,
+      "board": [],
+      "events": [
+        {
+          "action": {
+            "type": "fold"
+          },
+          "classification": "ok",
+          "index": 0,
+          "seat": "SB",
+          "street": "preflop"
+        }
+      ],
+      "hand_id": "h_000000000004",
+      "net_bb": {
+        "agent": -0.5,
+        "opponent": 0.5
+      },
+      "seed": 4,
+      "terminal_reason": "fold"
+    },
+    {
+      "action_count": 11,
+      "board": [
+        "Qs",
+        "8s",
+        "Ad",
+        "Jc",
+        "Ah"
+      ],
+      "events": [
+        {
+          "action": {
+            "amount_to_bb": 0.5,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 0,
+          "seat": "SB",
+          "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 1,
+          "seat": "BB",
+          "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 2,
+          "seat": "BB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 3,
+          "seat": "SB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 4,
+          "seat": "BB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 5,
+          "seat": "BB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 6,
+          "seat": "SB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 7,
+          "seat": "BB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "classification": "ok",
+          "index": 8,
+          "seat": "BB",
+          "street": "river"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "bet"
+          },
+          "classification": "ok",
+          "index": 9,
+          "seat": "SB",
+          "street": "river"
+        },
+        {
+          "action": {
+            "amount_to_bb": 1.0,
+            "type": "call"
+          },
+          "classification": "ok",
+          "index": 10,
+          "seat": "BB",
+          "street": "river"
+        }
+      ],
+      "hand_id": "h_000000000005",
+      "net_bb": {
+        "agent": -4.0,
+        "opponent": 4.0
+      },
+      "seed": 5,
+      "terminal_reason": "showdown"
+    }
+  ],
+  "schema_version": "1.0",
+  "summary": {
+    "controlled_bb_per_100": -190.0,
+    "controlled_bb_per_100_ci95": [
+      -358.034996,
+      -21.965004
+    ],
+    "hands": 5,
+    "total_net_bb": -9.5
+  },
+  "track": "controlled_rollout_hunl_dev"
+}

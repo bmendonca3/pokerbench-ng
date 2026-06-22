@@ -1,0 +1,7 @@
+schema_version: "1.0"
+agent:
+  name: "HttpAgent"
+  version: "0.0.1"
+  track_class: "agent"
+  entrypoint: "http://127.0.0.1:8080/act"
+

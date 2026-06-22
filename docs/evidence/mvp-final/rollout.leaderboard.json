@@ -1,0 +1,16 @@
+{
+  "agent_name": "PythonRandomAgent",
+  "benchmark_version": "0.1.0",
+  "primary_score": 0.0,
+  "schema_version": "1.0",
+  "summary": {
+    "controlled_bb_per_100": -190.0,
+    "controlled_bb_per_100_ci95": [
+      -358.034996,
+      -21.965004
+    ],
+    "hands": 5,
+    "total_net_bb": -9.5
+  },
+  "track_id": "controlled_rollout_hunl_dev"
+}
