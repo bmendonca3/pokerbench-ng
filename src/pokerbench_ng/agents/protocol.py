@@ -168,6 +168,12 @@ def validate_action(action: AgentAction) -> List[str]:
         errors.append(f"unknown action type: {action.type}")
     if action.type in {"bet", "raise"} and action.amount_to_bb is None:
         errors.append(f"{action.type} requires amount_to_bb")
-    if action.amount_to_bb is not None and action.amount_to_bb < 0:
+    if action.amount_to_bb is not None and not _is_number(action.amount_to_bb):
+        errors.append("amount_to_bb must be numeric")
+    if _is_number(action.amount_to_bb) and action.amount_to_bb < 0:
         errors.append("amount_to_bb cannot be negative")
     return errors
+
+
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)

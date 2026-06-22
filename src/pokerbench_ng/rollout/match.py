@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Sequence
 
 from pokerbench_ng.agents.protocol import AgentAction, AgentLegalAction, AgentRequest, AgentResponse
 from pokerbench_ng.agents.validation import validate_agent_response
@@ -15,9 +15,13 @@ def match_runner_status() -> str:
     return "match runner scaffolded"
 
 
-def run_hand(seed: int, agent: Any, opponent: Any, max_actions: int = 128) -> Dict[str, Any]:
+def run_hand(seed: int, agent: Any, opponent: Any, max_actions: int = 128, agent_seat: str = "SB") -> Dict[str, Any]:
+    if agent_seat not in {"SB", "BB"}:
+        raise ValueError("agent_seat must be SB or BB")
     state = new_hunl_hand(seed)
-    actors = {"SB": agent, "BB": opponent}
+    opponent_seat = _other_seat(agent_seat)
+    actors = {agent_seat: agent, opponent_seat: opponent}
+    actor_roles = {agent_seat: "agent", opponent_seat: "opponent"}
     starting = {player.seat: player.stack_bb + player.hand_contribution_bb for player in state.players}
     events: List[Dict[str, Any]] = []
     for action_index in range(max_actions):
@@ -26,16 +30,24 @@ def run_hand(seed: int, agent: Any, opponent: Any, max_actions: int = 128) -> Di
         request = _request_from_state(state, action_index)
         actor = actors[state.actor_seat]
         response, classification = _safe_act(actor, request)
-        if classification or validate_agent_response(request, response):
+        validation_errors = validate_agent_response(request, response)
+        if classification or validation_errors:
             classification = classification or "illegal"
             response = _fallback_response(request)
         engine_action = _engine_action(response)
         before_seat = state.actor_seat
-        state = apply_action(state, engine_action)
+        try:
+            state = apply_action(state, engine_action)
+        except ValueError:
+            classification = "illegal"
+            response = _fallback_response(request)
+            engine_action = _engine_action(response)
+            state = apply_action(state, engine_action)
         events.append(
             {
                 "index": action_index,
                 "seat": before_seat,
+                "actor_role": actor_roles[before_seat],
                 "action": response.action.to_dict(),
                 "classification": classification or "ok",
                 "street": request.state.get("street"),
@@ -52,12 +64,17 @@ def run_hand(seed: int, agent: Any, opponent: Any, max_actions: int = 128) -> Di
         "board": list(state.board),
         "action_count": len(events),
         "events": events,
-        "net_bb": {"agent": net_by_seat["SB"], "opponent": net_by_seat["BB"]},
+        "seat_assignment": {"agent": agent_seat, "opponent": opponent_seat},
+        "net_bb": {"agent": net_by_seat[agent_seat], "opponent": net_by_seat[opponent_seat]},
+        "net_bb_by_seat": net_by_seat,
     }
 
 
-def run_match(agent: Any, opponent: Any, seeds: List[int]) -> Dict[str, Any]:
-    hands = [run_hand(seed, agent, opponent) for seed in seeds]
+def run_match(agent: Any, opponent: Any, seeds: List[int], agent_seats: Sequence[str] | None = None) -> Dict[str, Any]:
+    seats = list(agent_seats) if agent_seats is not None else _alternating_agent_seats(len(seeds))
+    if len(seats) != len(seeds):
+        raise ValueError("agent_seats must have the same length as seeds")
+    hands = [run_hand(seed, agent, opponent, agent_seat=seat) for seed, seat in zip(seeds, seats)]
     return aggregate_rollout(hands)
 
 
@@ -83,8 +100,8 @@ def _safe_act(actor: Any, request: AgentRequest) -> tuple[AgentResponse, str | N
         if not isinstance(response, AgentResponse):
             response = AgentResponse.from_dict(response)
         return response, None
-    except Exception:
-        return _fallback_response(request), "malformed"
+    except Exception as exc:
+        return _fallback_response(request), getattr(exc, "classification", "malformed")
 
 
 def _fallback_response(request: AgentRequest) -> AgentResponse:
@@ -100,3 +117,11 @@ def _fallback_response(request: AgentRequest) -> AgentResponse:
 
 def _engine_action(response: AgentResponse) -> LegalAction:
     return LegalAction(response.action.type, amount_bb=response.action.amount_to_bb)
+
+
+def _other_seat(seat: str) -> str:
+    return "BB" if seat == "SB" else "SB"
+
+
+def _alternating_agent_seats(count: int) -> List[str]:
+    return ["SB" if index % 2 == 0 else "BB" for index in range(count)]

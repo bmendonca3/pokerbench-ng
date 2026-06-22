@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shlex
 import sys
@@ -19,7 +20,7 @@ from pokerbench_ng.reporting.leaderboard import leaderboard_entry
 from pokerbench_ng.reporting.markdown_report import write_markdown_report
 from pokerbench_ng.rollout.match import run_match
 from pokerbench_ng.rollout.scheduler import load_rollout_config, load_seed_manifest, seed_schedule
-from pokerbench_ng.static.scorer import evaluate_static_spots
+from pokerbench_ng.static.scorer import EvaluatedResponse, evaluate_static_spots
 from pokerbench_ng.static.spots import load_jsonl
 
 
@@ -164,6 +165,11 @@ def _eval_static(args: argparse.Namespace) -> int:
         )
         responses.append(_safe_agent_response(adapter, request))
     metrics = evaluate_static_spots(spots, responses)
+    metrics["reproducibility"] = _reproducibility_metadata(
+        agent_manifest,
+        scoring_version="static_v1",
+        inputs={"spots": Path(args.spots)},
+    )
     run_id = _run_id("static")
     out_dir = Path(args.out_dir)
     metrics_path = out_dir / f"{run_id}.metrics.json"
@@ -191,6 +197,15 @@ def _eval_rollout(args: argparse.Namespace) -> int:
     else:
         seeds = seed_schedule(requested_hands)
     metrics = run_match(adapter, CallCheckBot(), seeds)
+    repro_inputs = {"config": Path(args.config)}
+    if manifest_path and Path(manifest_path).exists():
+        repro_inputs["seed_manifest"] = Path(manifest_path)
+    metrics["reproducibility"] = _reproducibility_metadata(
+        agent_manifest,
+        scoring_version="rollout_v1",
+        inputs=repro_inputs,
+        seed_schedule=seeds,
+    )
     run_id = _run_id("rollout")
     out_dir = Path(args.out_dir)
     runs_dir = Path(args.runs_dir)
@@ -199,7 +214,15 @@ def _eval_rollout(args: argparse.Namespace) -> int:
     run_path = runs_dir / f"{run_id}.json"
     leaderboard_path = out_dir / f"{run_id}.leaderboard.json"
     write_json_report(metrics_path, metrics)
-    write_json_report(run_path, {"schema_version": "1.0", "run_id": run_id, "hands": metrics.get("hands_detail", [])})
+    write_json_report(
+        run_path,
+        {
+            "schema_version": "1.0",
+            "run_id": run_id,
+            "reproducibility": metrics["reproducibility"],
+            "hands": metrics.get("hands_detail", []),
+        },
+    )
     write_markdown_report(markdown_path, metrics)
     write_json_report(leaderboard_path, leaderboard_entry(metrics, _agent_name(agent_manifest)))
     print(metrics_path)
@@ -232,14 +255,55 @@ def _agent_name(path: Path) -> str:
     return str(load_agent_manifest(path).get("agent", {}).get("name", path.stem))
 
 
-def _safe_agent_response(adapter: SubprocessAgentAdapter, request: AgentRequest) -> AgentResponse:
+def _reproducibility_metadata(
+    agent_manifest: Path,
+    scoring_version: str,
+    inputs: dict[str, Path],
+    seed_schedule: list[int] | None = None,
+) -> dict[str, object]:
+    metadata: dict[str, object] = {
+        "benchmark_version": __version__,
+        "package_version": __version__,
+        "scoring_version": scoring_version,
+        "agent_manifest_path": str(agent_manifest),
+        "agent_manifest_hash": _file_sha256(agent_manifest),
+        "inputs": {
+            name: {"path": str(path), "sha256": _file_sha256(path)}
+            for name, path in sorted(inputs.items())
+        },
+    }
+    if seed_schedule is not None:
+        metadata["seed_schedule_hash"] = _text_sha256(",".join(str(seed) for seed in seed_schedule))
+        metadata["seed_count"] = len(seed_schedule)
+    return metadata
+
+
+def _file_sha256(path: Path) -> str:
+    hasher = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            hasher.update(chunk)
+    return f"sha256:{hasher.hexdigest()}"
+
+
+def _text_sha256(text: str) -> str:
+    return f"sha256:{hashlib.sha256(text.encode('utf-8')).hexdigest()}"
+
+
+def _safe_agent_response(adapter: SubprocessAgentAdapter, request: AgentRequest) -> EvaluatedResponse:
     try:
-        return adapter.act(request)
-    except Exception:
+        return EvaluatedResponse(adapter.act(request))
+    except Exception as exc:
         for action in request.legal_actions:
             if action.type in {"check", "fold"}:
-                return AgentResponse("1.0", request.request_id, AgentAction(action.type))
-        return AgentResponse("1.0", request.request_id, AgentAction("fold"))
+                return EvaluatedResponse(
+                    AgentResponse("1.0", request.request_id, AgentAction(action.type)),
+                    getattr(exc, "classification", "malformed"),
+                )
+        return EvaluatedResponse(
+            AgentResponse("1.0", request.request_id, AgentAction("fold")),
+            getattr(exc, "classification", "malformed"),
+        )
 
 
 def _run_id(prefix: str) -> str:

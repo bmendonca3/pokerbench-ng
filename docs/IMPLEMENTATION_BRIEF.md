@@ -14,7 +14,25 @@ The first deliverable is a working MVP that can:
 
 ## Current Slice
 
-The local-first MVP is complete. The repo can validate the example agent, run static EV-loss evaluation over the toy public spot, run a controlled HUNL rollout against `CallCheckBot`, and emit metrics, Markdown, leaderboard, and run JSON artifacts.
+The local-first MVP seed repo is implemented. The repo can validate the example agent, run static EV-loss evaluation over the toy public spot, run a controlled HUNL smoke rollout against `CallCheckBot`, and emit metrics, Markdown, leaderboard, and run JSON artifacts with reproducibility metadata.
+
+This is not a benchmark-quality release yet. The current artifacts prove evaluator plumbing and report generation. They do not establish leaderboard stability, solver-grade coverage, hidden evaluation integrity, or opponent robustness.
+
+Verified local commands:
+
+```bash
+python3 -m pip install -e ".[dev]"
+pokerbench-ng validate-agent examples/agents/python_random_agent/agent.yaml
+pokerbench-ng eval-static \
+  --agent examples/agents/python_random_agent/agent.yaml \
+  --spots src/pokerbench_ng/data/public_spots/dev.example.jsonl
+pokerbench-ng eval-rollout \
+  --agent examples/agents/python_random_agent/agent.yaml \
+  --config configs/mvp_hunl_rollout.yaml \
+  --hands 20
+python3 -m unittest discover -s tests
+python3 -m compileall src tests
+```
 
 ## Next Ticket
 

@@ -9,6 +9,7 @@
           "action": {
             "type": "fold"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 0,
           "seat": "SB",
@@ -20,11 +21,19 @@
         "agent": -0.5,
         "opponent": 0.5
       },
+      "net_bb_by_seat": {
+        "BB": 0.5,
+        "SB": -0.5
+      },
+      "seat_assignment": {
+        "agent": "SB",
+        "opponent": "BB"
+      },
       "seed": 1,
       "terminal_reason": "fold"
     },
     {
-      "action_count": 11,
+      "action_count": 9,
       "board": [
         "3c",
         "3h",
@@ -38,6 +47,7 @@
             "amount_to_bb": 0.5,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 0,
           "seat": "SB",
@@ -45,8 +55,10 @@
         },
         {
           "action": {
-            "type": "check"
+            "amount_to_bb": 2.0,
+            "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 1,
           "seat": "BB",
@@ -54,21 +66,24 @@
         },
         {
           "action": {
-            "type": "check"
+            "amount_to_bb": 1.0,
+            "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 2,
-          "seat": "BB",
-          "street": "flop"
+          "seat": "SB",
+          "street": "preflop"
         },
         {
           "action": {
             "amount_to_bb": 1.0,
             "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 3,
-          "seat": "SB",
+          "seat": "BB",
           "street": "flop"
         },
         {
@@ -76,15 +91,18 @@
             "amount_to_bb": 1.0,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 4,
-          "seat": "BB",
+          "seat": "SB",
           "street": "flop"
         },
         {
           "action": {
-            "type": "check"
+            "amount_to_bb": 1.0,
+            "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 5,
           "seat": "BB",
@@ -93,8 +111,9 @@
         {
           "action": {
             "amount_to_bb": 1.0,
-            "type": "bet"
+            "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 6,
           "seat": "SB",
@@ -103,30 +122,12 @@
         {
           "action": {
             "amount_to_bb": 1.0,
-            "type": "call"
+            "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 7,
           "seat": "BB",
-          "street": "turn"
-        },
-        {
-          "action": {
-            "type": "check"
-          },
-          "classification": "ok",
-          "index": 8,
-          "seat": "BB",
-          "street": "river"
-        },
-        {
-          "action": {
-            "amount_to_bb": 1.0,
-            "type": "bet"
-          },
-          "classification": "ok",
-          "index": 9,
-          "seat": "SB",
           "street": "river"
         },
         {
@@ -134,16 +135,25 @@
             "amount_to_bb": 1.0,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
-          "index": 10,
-          "seat": "BB",
+          "index": 8,
+          "seat": "SB",
           "street": "river"
         }
       ],
       "hand_id": "h_000000000002",
       "net_bb": {
-        "agent": -4.0,
-        "opponent": 4.0
+        "agent": 5.0,
+        "opponent": -5.0
+      },
+      "net_bb_by_seat": {
+        "BB": 5.0,
+        "SB": -5.0
+      },
+      "seat_assignment": {
+        "agent": "BB",
+        "opponent": "SB"
       },
       "seed": 2,
       "terminal_reason": "showdown"
@@ -156,6 +166,7 @@
           "action": {
             "type": "fold"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 0,
           "seat": "SB",
@@ -167,30 +178,124 @@
         "agent": -0.5,
         "opponent": 0.5
       },
+      "net_bb_by_seat": {
+        "BB": 0.5,
+        "SB": -0.5
+      },
+      "seat_assignment": {
+        "agent": "SB",
+        "opponent": "BB"
+      },
       "seed": 3,
       "terminal_reason": "fold"
     },
     {
-      "action_count": 1,
-      "board": [],
+      "action_count": 8,
+      "board": [
+        "6c",
+        "As",
+        "9c",
+        "Ah",
+        "Qh"
+      ],
       "events": [
         {
           "action": {
-            "type": "fold"
+            "amount_to_bb": 0.5,
+            "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 0,
           "seat": "SB",
           "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "agent",
+          "classification": "ok",
+          "index": 1,
+          "seat": "BB",
+          "street": "preflop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "agent",
+          "classification": "ok",
+          "index": 2,
+          "seat": "BB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "opponent",
+          "classification": "ok",
+          "index": 3,
+          "seat": "SB",
+          "street": "flop"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "agent",
+          "classification": "ok",
+          "index": 4,
+          "seat": "BB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "opponent",
+          "classification": "ok",
+          "index": 5,
+          "seat": "SB",
+          "street": "turn"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "agent",
+          "classification": "ok",
+          "index": 6,
+          "seat": "BB",
+          "street": "river"
+        },
+        {
+          "action": {
+            "type": "check"
+          },
+          "actor_role": "opponent",
+          "classification": "ok",
+          "index": 7,
+          "seat": "SB",
+          "street": "river"
         }
       ],
       "hand_id": "h_000000000004",
       "net_bb": {
-        "agent": -0.5,
-        "opponent": 0.5
+        "agent": -1.0,
+        "opponent": 1.0
+      },
+      "net_bb_by_seat": {
+        "BB": -1.0,
+        "SB": 1.0
+      },
+      "seat_assignment": {
+        "agent": "BB",
+        "opponent": "SB"
       },
       "seed": 4,
-      "terminal_reason": "fold"
+      "terminal_reason": "showdown"
     },
     {
       "action_count": 11,
@@ -207,6 +312,7 @@
             "amount_to_bb": 0.5,
             "type": "call"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 0,
           "seat": "SB",
@@ -216,6 +322,7 @@
           "action": {
             "type": "check"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 1,
           "seat": "BB",
@@ -225,6 +332,7 @@
           "action": {
             "type": "check"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 2,
           "seat": "BB",
@@ -235,6 +343,7 @@
             "amount_to_bb": 1.0,
             "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 3,
           "seat": "SB",
@@ -245,6 +354,7 @@
             "amount_to_bb": 1.0,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 4,
           "seat": "BB",
@@ -254,6 +364,7 @@
           "action": {
             "type": "check"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 5,
           "seat": "BB",
@@ -264,6 +375,7 @@
             "amount_to_bb": 1.0,
             "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 6,
           "seat": "SB",
@@ -274,6 +386,7 @@
             "amount_to_bb": 1.0,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 7,
           "seat": "BB",
@@ -283,6 +396,7 @@
           "action": {
             "type": "check"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 8,
           "seat": "BB",
@@ -293,6 +407,7 @@
             "amount_to_bb": 1.0,
             "type": "bet"
           },
+          "actor_role": "agent",
           "classification": "ok",
           "index": 9,
           "seat": "SB",
@@ -303,6 +418,7 @@
             "amount_to_bb": 1.0,
             "type": "call"
           },
+          "actor_role": "opponent",
           "classification": "ok",
           "index": 10,
           "seat": "BB",
@@ -314,19 +430,51 @@
         "agent": -4.0,
         "opponent": 4.0
       },
+      "net_bb_by_seat": {
+        "BB": 4.0,
+        "SB": -4.0
+      },
+      "seat_assignment": {
+        "agent": "SB",
+        "opponent": "BB"
+      },
       "seed": 5,
       "terminal_reason": "showdown"
     }
   ],
+  "reproducibility": {
+    "agent_manifest_hash": "sha256:8df39d614e32cdc8c43ebbaa4bf45489d4317b61a15eb27984e2c81cf960f14e",
+    "agent_manifest_path": "examples/agents/python_random_agent/agent.yaml",
+    "benchmark_version": "0.1.0",
+    "inputs": {
+      "config": {
+        "path": "configs/mvp_hunl_rollout.yaml",
+        "sha256": "sha256:924a6418556f3d1f748513629c34d5f481f086d39ae191c7118e443d91f07e0f"
+      },
+      "seed_manifest": {
+        "path": "src/pokerbench_ng/data/public_seed_manifests/hunl_100bb_mvp.example.json",
+        "sha256": "sha256:afc257ce3dc56e7af32e0c7d3dffbabcaac7123350cf1a11a9885d60caaa775f"
+      }
+    },
+    "package_version": "0.1.0",
+    "scoring_version": "rollout_v1",
+    "seed_count": 5,
+    "seed_schedule_hash": "sha256:b726eed184cea30d5a57fb645f77527e4232bec085e24e8d29a6e3b2c84c2db1"
+  },
   "schema_version": "1.0",
   "summary": {
-    "controlled_bb_per_100": -190.0,
+    "controlled_bb_per_100": -20.0,
     "controlled_bb_per_100_ci95": [
-      -358.034996,
-      -21.965004
+      -305.043576,
+      265.043576
     ],
+    "decisions": 14,
     "hands": 5,
-    "total_net_bb": -9.5
+    "illegal_action_rate": 0.0,
+    "malformed_rate": 0.0,
+    "process_error_rate": 0.0,
+    "timeout_rate": 0.0,
+    "total_net_bb": -1.0
   },
   "track": "controlled_rollout_hunl_dev"
 }

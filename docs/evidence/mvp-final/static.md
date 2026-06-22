@@ -8,5 +8,7 @@ Track: `static_hunl_dev`
 - `illegal_action_rate`: 0.0
 - `malformed_rate`: 0.0
 - `near_best_agreement`: 0.0
+- `process_error_rate`: 0.0
 - `static_ev_loss_bb_per_decision`: 1.42
 - `static_spots`: 1
+- `timeout_rate`: 0.0

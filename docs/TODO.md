@@ -21,3 +21,11 @@
 - [x] `pokerbench-ng eval-static ...` emits metrics JSON.
 - [x] `pokerbench-ng eval-rollout ...` emits run JSONL and bb/100.
 - [x] `python3 -m unittest discover -s tests` passes.
+
+## Consultant Hardening
+
+- [x] Enforce legal action type, call amount, and bet/raise bounds before engine application.
+- [x] Preserve timeout, malformed, process-error, and illegal classifications in static and rollout metrics.
+- [x] Make rollout seat assignment explicit and alternate submitted-agent SB/BB seats in smoke runs.
+- [x] Add reproducibility metadata to metrics, run JSON, and leaderboard entries.
+- [x] Align README and evidence wording with toy static spot and smoke rollout scope.

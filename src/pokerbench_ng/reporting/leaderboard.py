@@ -11,7 +11,7 @@ def leaderboard_status() -> str:
 
 def leaderboard_entry(metrics: Dict[str, Any], agent_name: str) -> Dict[str, Any]:
     summary = metrics.get("summary", {})
-    return {
+    entry = {
         "schema_version": "1.0",
         "benchmark_version": metrics.get("benchmark_version", "0.1.0"),
         "track_id": metrics.get("track", "unknown"),
@@ -19,6 +19,9 @@ def leaderboard_entry(metrics: Dict[str, Any], agent_name: str) -> Dict[str, Any
         "primary_score": _primary_score(summary),
         "summary": summary,
     }
+    if "reproducibility" in metrics:
+        entry["reproducibility"] = metrics["reproducibility"]
+    return entry
 
 
 def _primary_score(summary: Dict[str, Any]) -> float:

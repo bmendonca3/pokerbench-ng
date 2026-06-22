@@ -6,7 +6,14 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-from pokerbench_ng.agents.protocol import VALID_TRACK_CLASSES, AgentRequest, AgentResponse, validate_action
+from pokerbench_ng.agents.protocol import (
+    VALID_TRACK_CLASSES,
+    AgentAction,
+    AgentLegalAction,
+    AgentRequest,
+    AgentResponse,
+    validate_action,
+)
 
 
 def load_agent_manifest(path: Path) -> Dict[str, Any]:
@@ -77,7 +84,46 @@ def validate_agent_response(request: AgentRequest, response: AgentResponse) -> L
     if response.request_id != request.request_id:
         errors.append("response request_id must match request")
     errors.extend(validate_action(response.action))
-    legal_types = {action.type for action in request.legal_actions}
-    if response.action.type not in legal_types:
+    matching_actions = [action for action in request.legal_actions if action.type == response.action.type]
+    if not matching_actions:
         errors.append("response action must be legal for request")
+    else:
+        errors.extend(_validate_action_amount(response.action, matching_actions))
     return errors
+
+
+def _validate_action_amount(action: AgentAction, legal_actions: List[AgentLegalAction]) -> List[str]:
+    errors: List[str] = []
+    amount = action.amount_to_bb
+    if action.type in {"fold", "check"}:
+        if amount is not None:
+            errors.append(f"{action.type} must not include amount_to_bb")
+        return errors
+
+    if action.type == "call":
+        if amount is None:
+            return errors
+        if not isinstance(amount, (int, float)) or isinstance(amount, bool):
+            return errors
+        expected_amounts = [legal.amount_bb for legal in legal_actions if legal.amount_bb is not None]
+        if expected_amounts and not any(_same_amount(amount, expected) for expected in expected_amounts):
+            errors.append("call amount_to_bb must match legal call amount")
+        return errors
+
+    if action.type in {"bet", "raise"}:
+        if not isinstance(amount, (int, float)) or isinstance(amount, bool):
+            return errors
+        in_range = False
+        for legal in legal_actions:
+            if legal.min_to_bb is None or legal.max_to_bb is None:
+                continue
+            if amount + 1e-9 >= legal.min_to_bb and amount - 1e-9 <= legal.max_to_bb:
+                in_range = True
+                break
+        if not in_range:
+            errors.append(f"{action.type} amount_to_bb must be within legal bounds")
+    return errors
+
+
+def _same_amount(left: float, right: float) -> bool:
+    return abs(float(left) - float(right)) <= 1e-9

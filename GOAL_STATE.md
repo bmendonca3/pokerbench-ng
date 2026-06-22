@@ -2,41 +2,141 @@
 
 ## Current Status
 Status: complete
-Updated: 2026-06-21 17:45:38 MST
-Next action: Optional follow-up only: harden the MVP with richer datasets, stricter JSON Schema validation, and broader rollout opponents.
+Updated: 2026-06-21 20:03 MST
+Next action: Optional publication step: commit and push the completed hardening changes if the user wants the public GitHub repo updated.
+Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STATE.md`
 
 ## Contract
-- Outcome: PokerBench-NG becomes an actionable, evidence-driven implementation project: a clean-room local evaluator MVP can validate an agent, run static EV-loss evaluation, run controlled HUNL rollouts, emit JSON/Markdown reports, and reproduce results from seeds/config hashes.
+- Outcome: PokerBench-NG hardening pass addresses the ChatGPT Consultant MVP review so the repo remains an honest local-first MVP seed repo and removes the highest-risk correctness gaps before broader benchmark claims.
 - Enhanced prompt:
 
-  Improve the PokerBench-NG planning bundle so it drives implementation of a credible open AI poker benchmark. Start by converting the scaffold into a clean repo with deterministic Python package structure, strict JSON agent protocol placeholders, HUNL engine skeleton, baseline-bot interfaces, static/rollout evaluator entrypoints, docs, and tests. Preserve clean-room separation from Commons Clause code and keep arena play secondary to scientific scoring. Verify each milestone with executable commands and recorded artifacts.
+  Improve the pushed PokerBench-NG seed repo by implementing the consultant's top MVP-hardening brief. Start with protocol legality: validate legal action type plus bet/raise bounds and supplied call amounts before engine application; preserve timeout/malformed/process/illegal classifications; use fallback actions for invalid agent responses; and prove the change with focused protocol, rollout, full test, compile, and CLI smoke checks. Then continue through reliability metrics, explicit seat assignment, reproducibility metadata, and README/evidence alignment unless a verification blocker appears.
 
-- Context: Implementation repo lives at `/Users/brianmendonca/Documents/pokerbench-ng`. Source planning bundle lives at `/Users/brianmendonca/Documents/pokerbench-ng-artifact-pack`; zip artifact lives at `/Users/brianmendonca/Documents/pokerbench-ng-artifact-pack.zip`; ChatGPT consultant thread is `https://chatgpt.com/c/6a383a82-c998-832f-9ee4-5e6a5db3930f`.
-- Boundaries: Work in this local repo and the planning bundle. Do not copy source code from `JoeAzar/pokerbench`; only use feature-level inspiration and independently written implementation. Do not create GitHub repos, push branches, open PRs, use paid APIs, or run external hosted evaluations without explicit user instruction.
+- Context: Implementation repo lives at `/Users/brianmendonca/Documents/pokerbench-ng`; public repo is `https://github.com/bmendonca3/pokerbench-ng`; initial MVP commit is `5763e2e4f6a0b9013aa0f4b1580b3d1599ab65ba`; ChatGPT consultant thread is `https://chatgpt.com/c/6a383a82-c998-832f-9ee4-5e6a5db3930f`.
+- Boundaries: Work in this local repo. Do not copy source code from `JoeAzar/pokerbench`; only use feature-level inspiration and independently written implementation. Do not use paid APIs, hosted hidden evaluations, or solver/private data. Pushing is allowed only when the user explicitly asks for it again or when a clear handoff requires publishing the completed local state.
 - Constraints: Keep MVP local-first; HUNL before 6-max; static EV-loss and controlled rollout before public arena; model-only, agent, and tool-assisted tracks must stay separate; hidden evaluation and AIVAT/MIVAT are v1/v2 roadmap items, not MVP blockers; no secrets, solver licenses, private datasets, or tokens in docs.
 - Verification:
-  - Fast loop: `.venv/bin/python -m unittest discover -s tests`, `.venv/bin/python -m compileall src tests`, `.venv/bin/pokerbench-ng --help`.
-  - Regression/control: review changed file list; ensure no copied third-party source; ensure `README.md`, `docs/PLAN.md`, `docs/TODO.md`, and `docs/IMPLEMENTATION_BRIEF.md` remain consistent.
-  - Final MVP gate: `.venv/bin/python -m pip install -e ".[dev]"`, `.venv/bin/pokerbench-ng validate-agent examples/agents/python_random_agent/agent.yaml`, `pokerbench-ng eval-static ...`, `pokerbench-ng eval-rollout ...`, full tests, and generated metrics/report artifacts exist.
+  - Fast loop for item 1: `.venv/bin/python -m unittest tests.unit.test_protocol tests.integration.test_cli`; `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20`.
+  - Regression/control: `.venv/bin/python -m unittest discover -s tests`, `.venv/bin/python -m compileall src tests`, changed-file review.
+  - Final hardening gate: item-specific done-condition commands from the consultant brief plus full tests and compile pass.
   - Evidence to save: command summaries, generated run/report paths, changed file list, and unresolved risks in this ledger.
 - Iteration policy: Work one milestone at a time. Prefer the smallest executable vertical slice over broad scaffolding. After each attempt, update this file with result, evidence, and next action. If a check fails, fix the narrowest cause or record the blocker before expanding scope.
 - Stop condition: Pause as blocked if the next milestone requires solver-labeled proprietary data, hosted hidden evaluation infrastructure, external model API credentials, GitHub publication, or a license decision that has not been approved by the user.
 
 ## Plan
-- [x] Bootstrap clean local repo at `/Users/brianmendonca/Documents/pokerbench-ng`.
-- [x] Add package skeleton, `pyproject.toml`, CLI entrypoint, docs, schemas, examples, and test directories from the scaffold.
-- [x] Add starter card/deck primitives, legal-action model, agent manifest validation, baseline bot shells, static/rollout/reporting boundaries, and tests.
-- [x] Implement starter card/deck/state primitives with deterministic shuffle and JSON serialization checks.
-- [x] Implement starter HUNL legal-action generation and state transitions with conservation/property tests.
-- [x] Add full showdown hand evaluation and payout.
-- [x] Implement strict agent request/response schemas and Python/subprocess adapter stubs that execute real decisions.
-- [x] Implement AlwaysFold, CallCheck, and RandomLegal baseline bots using the full request protocol.
-- [x] Implement toy static evaluator with EV-loss scoring against public example spots.
-- [x] Implement controlled rollout evaluator with seed manifest, run JSONL, bb/100, and bootstrap CI.
-- [x] Implement JSON/Markdown reports and local leaderboard entry generation.
-- [x] Run MVP final gate and record artifact paths.
+- [x] Item 1: Enforce full legal-action validation before rollout engine application.
+- [x] Item 2: Add real reliability metrics to static and rollout reports.
+- [x] Item 3: Make rollout seat assignment explicit and avoid SB-only scoring.
+- [x] Item 4: Add minimal reproducibility metadata to reports/leaderboard.
+- [x] Item 5: Align README and evidence language with toy/static smoke scope.
+- [x] Previous MVP seed repo gate completed and pushed.
 
 ## Attempt Ledger
+### 2026-06-21 20:03 MST - item 5 README and evidence alignment completed
+- Result: README and implementation brief now call the project a local-first MVP seed repo, describe the static dataset as a toy public spot, describe rollout as a smoke rollout against `CallCheckBot`, and explicitly avoid benchmark-quality release claims. Refreshed committed evidence snapshots from the latest verified run so they include reproducibility metadata and explicit seat assignments. Added `docs/evidence/mvp-final/README.md` to state what the snapshots prove and do not prove.
+- Evidence:
+  - Changed files:
+    - `README.md`
+    - `docs/IMPLEMENTATION_BRIEF.md`
+    - `docs/TODO.md`
+    - `docs/evidence/mvp-final/README.md`
+    - `docs/evidence/mvp-final/static.metrics.json`
+    - `docs/evidence/mvp-final/static.md`
+    - `docs/evidence/mvp-final/static.leaderboard.json`
+    - `docs/evidence/mvp-final/rollout.metrics.json`
+    - `docs/evidence/mvp-final/rollout.md`
+    - `docs/evidence/mvp-final/rollout.leaderboard.json`
+    - `docs/evidence/mvp-final/rollout.run.json`
+  - Evidence refresh assertion passed: static metrics, rollout metrics, and rollout run snapshots include `reproducibility`.
+  - Wording check passed: `grep -R "hosted hidden\|AIVAT\|credible benchmark release" README.md docs/IMPLEMENTATION_BRIEF.md || true` returned no matches.
+  - Full regression pass: `.venv/bin/python -m unittest discover -s tests` ran 61 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+- Next action: Commit/push only if publication is desired; otherwise the local hardening pass is complete.
+
+### 2026-06-21 20:00 MST - item 4 reproducibility metadata completed
+- Result: Metrics, run JSON, and leaderboard entries now include a `reproducibility` object with benchmark/package/scoring versions, agent manifest path/hash, input file hashes, seed schedule hash, and seed count for rollout runs. Added concise schema documentation for the new metadata and linked it from the README.
+- Evidence:
+  - Changed files:
+    - `src/pokerbench_ng/cli.py`
+    - `src/pokerbench_ng/reporting/leaderboard.py`
+    - `tests/integration/test_cli.py`
+    - `docs/SCHEMAS.md`
+    - `README.md`
+  - Focused test pass: `.venv/bin/python -m unittest tests.integration.test_cli` ran 6 tests and passed.
+  - Eval-suite pass: `.venv/bin/pokerbench-ng eval-suite --agent examples/agents/python_random_agent/agent.yaml --suite mvp_hunl`.
+  - Provenance assertion passed against `reports/static_1782095498788.leaderboard.json`; `reproducibility.agent_manifest_hash` exists and scoring version was `static_v1`.
+  - Full regression pass: `.venv/bin/python -m unittest discover -s tests` ran 61 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+- Next action: Update README/docs wording to say "local-first MVP seed repo", "toy public static spot", and "smoke rollout against CallCheckBot"; avoid claiming benchmark-quality release.
+
+### 2026-06-21 19:57 MST - item 3 explicit seat assignment completed
+- Result: Rollout hands now accept explicit `agent_seat`, match runs alternate submitted-agent seats by default, each hand record includes `seat_assignment` and `net_bb_by_seat`, and submitted-agent score is computed from the assigned seat rather than implicitly from SB. Event records now include `actor_role`, and rollout reliability rates count submitted-agent decisions only when role metadata is present.
+- Evidence:
+  - Changed files:
+    - `src/pokerbench_ng/rollout/match.py`
+    - `src/pokerbench_ng/rollout/scorer.py`
+    - `tests/unit/test_rollout_match.py`
+    - `tests/unit/test_rollout_scorer.py`
+    - `tests/integration/test_cli.py`
+  - Focused test pass: `.venv/bin/python -m unittest tests.unit.test_rollout_match tests.unit.test_rollout_scorer tests.integration.test_cli` ran 17 tests and passed.
+  - Rollout smoke pass: `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20`.
+  - Smoke artifacts:
+    - `reports/rollout_1782095376901.metrics.json`
+    - `runs/rollout_1782095376901.json`
+    - `reports/rollout_1782095376901.md`
+    - `reports/rollout_1782095376901.leaderboard.json`
+  - Direct artifact assertion passed: first six submitted-agent seats were `['SB', 'BB', 'SB', 'BB', 'SB', 'BB']`; run had 20 hands and 65 submitted-agent decisions.
+  - Regression pass: `.venv/bin/python -m unittest discover -s tests` ran 61 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+- Next action: Add reproducibility metadata with agent manifest/config/spot/seed hashes, scoring version, benchmark version, and package version.
+
+### 2026-06-21 18:40 MST - item 2 reliability metrics completed
+- Result: Added response classification plumbing for static evaluation and aggregate reliability rates for both static and rollout metrics. Static scoring now preserves fallback-causing classifications (`timeout`, `malformed`, `process_error`) through `EvaluatedResponse`, validates responses against spot legal actions, and counts illegal responses separately from malformed/process failures. Rollout aggregation now reports decision count plus illegal, timeout, malformed, and process-error rates from event classifications.
+- Evidence:
+  - Changed files:
+    - `src/pokerbench_ng/cli.py`
+    - `src/pokerbench_ng/static/scorer.py`
+    - `src/pokerbench_ng/rollout/scorer.py`
+    - `tests/unit/test_static_scorer.py`
+    - `tests/unit/test_rollout_scorer.py`
+  - Focused test pass: `.venv/bin/python -m unittest tests.unit.test_static_scorer tests.unit.test_rollout_scorer tests.unit.test_protocol tests.unit.test_rollout_match tests.integration.test_cli` ran 28 tests and passed.
+  - Static CLI pass: `.venv/bin/pokerbench-ng eval-static --agent examples/agents/python_random_agent/agent.yaml --spots src/pokerbench_ng/data/public_spots/dev.example.jsonl`.
+  - Rollout CLI pass: `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20`.
+  - Fresh metrics evidence:
+    - `reports/static_1782090805465.metrics.json` includes `illegal_action_rate`, `timeout_rate`, `malformed_rate`, and `process_error_rate`.
+    - `reports/rollout_1782090807475.metrics.json` includes those reliability rates plus `decisions: 127` for 20 hands.
+  - Regression pass: `.venv/bin/python -m unittest discover -s tests` ran 57 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+- Next action: Implement item 3 by making submitted-agent seat assignment explicit in rollout hand records and alternating SB/BB over smoke rollouts.
+
+### 2026-06-21 18:37 MST - item 1 legal-action validation completed
+- Result: Implemented request-aware response validation for legal action type, numeric amounts, bet/raise min/max bounds, supplied call amount consistency, and amount-free fold/check responses. Rollout now classifies validation failures as `illegal`, uses fallback before engine application, preserves adapter classifications such as `timeout`, and has a defensive engine-rejection fallback path.
+- Evidence:
+  - Changed files:
+    - `src/pokerbench_ng/agents/protocol.py`
+    - `src/pokerbench_ng/agents/validation.py`
+    - `src/pokerbench_ng/rollout/match.py`
+    - `tests/unit/test_protocol.py`
+    - `tests/unit/test_rollout_match.py`
+  - Focused test pass: `.venv/bin/python -m unittest tests.unit.test_protocol tests.unit.test_rollout_match tests.integration.test_cli` ran 18 tests and passed.
+  - CLI smoke pass: `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20`.
+  - Smoke artifacts:
+    - `reports/rollout_1782090650050.metrics.json`
+    - `runs/rollout_1782090650050.json`
+    - `reports/rollout_1782090650050.md`
+    - `reports/rollout_1782090650050.leaderboard.json`
+  - Regression pass: `.venv/bin/python -m unittest discover -s tests` ran 54 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+- Next action: Implement item 2 by carrying response classifications into static/rollout summary metrics instead of only recording action-level fallback outcomes.
+
+### 2026-06-21 18:35 MST - hardening loop initialized from ChatGPT review
+- Result: Resumed Goalcraft Persist after ChatGPT Consultant reviewed the public repo and identified no blocker for "local-first MVP seed repo" but flagged shallow action validation as the top correctness risk before stronger benchmark-quality claims.
+- Evidence:
+  - Consultant thread: `https://chatgpt.com/c/6a383a82-c998-832f-9ee4-5e6a5db3930f`
+  - Public repo: `https://github.com/bmendonca3/pokerbench-ng`
+  - Initial pushed commit: `5763e2e4f6a0b9013aa0f4b1580b3d1599ab65ba`
+- Next action: Implement item 1 in `src/pokerbench_ng/agents/validation.py`, `src/pokerbench_ng/rollout/match.py`, and focused tests.
+
 ### 2026-06-21 17:45:38 MST - MVP goal state completed
 - Result: Completed the local-first MVP gate. PokerBench-NG can validate an agent, run static EV-loss evaluation, run controlled HUNL rollout, generate JSON/Markdown/leaderboard artifacts, and reproduce through the local `.venv` commands.
 - Evidence:

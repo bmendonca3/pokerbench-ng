@@ -18,11 +18,54 @@ class RolloutScorerTests(unittest.TestCase):
 
     def test_aggregate_rollout(self):
         metrics = aggregate_rollout([
-            {"net_bb": {"agent": 1}},
-            {"net_bb": {"agent": -0.5}},
+            {"net_bb": {"agent": 1}, "events": [{"actor_role": "agent", "classification": "ok"}]},
+            {"net_bb": {"agent": -0.5}, "events": [{"actor_role": "agent", "classification": "ok"}]},
         ])
         self.assertEqual(metrics["summary"]["hands"], 2)
         self.assertEqual(metrics["summary"]["controlled_bb_per_100"], 25.0)
+        self.assertEqual(metrics["summary"]["decisions"], 2)
+        self.assertEqual(metrics["summary"]["illegal_action_rate"], 0.0)
+
+    def test_aggregate_rollout_reliability_rates(self):
+        metrics = aggregate_rollout(
+            [
+                {
+                    "net_bb": {"agent": 1},
+                    "events": [
+                        {"actor_role": "agent", "classification": "ok"},
+                        {"actor_role": "agent", "classification": "illegal"},
+                        {"actor_role": "agent", "classification": "timeout"},
+                    ],
+                },
+                {
+                    "net_bb": {"agent": -1},
+                    "events": [
+                        {"actor_role": "agent", "classification": "malformed"},
+                        {"actor_role": "agent", "classification": "process_error"},
+                    ],
+                },
+            ]
+        )
+        self.assertEqual(metrics["summary"]["decisions"], 5)
+        self.assertEqual(metrics["summary"]["illegal_action_rate"], 0.2)
+        self.assertEqual(metrics["summary"]["timeout_rate"], 0.2)
+        self.assertEqual(metrics["summary"]["malformed_rate"], 0.2)
+        self.assertEqual(metrics["summary"]["process_error_rate"], 0.2)
+
+    def test_aggregate_rollout_ignores_opponent_reliability_events(self):
+        metrics = aggregate_rollout(
+            [
+                {
+                    "net_bb": {"agent": 1},
+                    "events": [
+                        {"actor_role": "agent", "classification": "ok"},
+                        {"actor_role": "opponent", "classification": "illegal"},
+                    ],
+                }
+            ]
+        )
+        self.assertEqual(metrics["summary"]["decisions"], 1)
+        self.assertEqual(metrics["summary"]["illegal_action_rate"], 0.0)
 
 
 if __name__ == "__main__":

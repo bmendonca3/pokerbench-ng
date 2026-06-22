@@ -1,3 +1,4 @@
+import json
 import unittest
 import tempfile
 from pathlib import Path
@@ -32,6 +33,14 @@ class CliTests(unittest.TestCase):
             files = {path.suffix for path in Path(tmpdir).iterdir()}
             self.assertIn(".json", files)
             self.assertIn(".md", files)
+            metrics = next(Path(tmpdir).glob("*.metrics.json"))
+            data = json.loads(metrics.read_text(encoding="utf-8"))
+            reproducibility = data["reproducibility"]
+            self.assertIn("agent_manifest_hash", reproducibility)
+            self.assertIn("spots", reproducibility["inputs"])
+            leaderboard = next(Path(tmpdir).glob("*.leaderboard.json"))
+            leaderboard_data = json.loads(leaderboard.read_text(encoding="utf-8"))
+            self.assertEqual(leaderboard_data["reproducibility"], reproducibility)
 
     def test_eval_rollout_writes_artifacts(self):
         with tempfile.TemporaryDirectory() as report_dir, tempfile.TemporaryDirectory() as run_dir:
@@ -52,7 +61,19 @@ class CliTests(unittest.TestCase):
             )
             self.assertEqual(status, 0)
             self.assertTrue(list(Path(report_dir).glob("*.metrics.json")))
-            self.assertTrue(list(Path(run_dir).glob("*.json")))
+            run_json = next(Path(run_dir).glob("*.json"))
+            self.assertTrue(run_json)
+            run_data = json.loads(run_json.read_text(encoding="utf-8"))
+            self.assertTrue(
+                any(hand["seat_assignment"]["agent"] == "BB" for hand in run_data["hands"])
+            )
+            self.assertIn("seed_schedule_hash", run_data["reproducibility"])
+            metrics = next(Path(report_dir).glob("*.metrics.json"))
+            metrics_data = json.loads(metrics.read_text(encoding="utf-8"))
+            self.assertEqual(run_data["reproducibility"], metrics_data["reproducibility"])
+            leaderboard = next(Path(report_dir).glob("*.leaderboard.json"))
+            leaderboard_data = json.loads(leaderboard.read_text(encoding="utf-8"))
+            self.assertEqual(leaderboard_data["reproducibility"], metrics_data["reproducibility"])
 
     def test_report_and_leaderboard_commands(self):
         with tempfile.TemporaryDirectory() as tmpdir:
