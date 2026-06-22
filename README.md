@@ -1,5 +1,7 @@
 # PokerBench-NG
 
+[![CI](https://github.com/bmendonca3/pokerbench-ng/actions/workflows/ci.yml/badge.svg)](https://github.com/bmendonca3/pokerbench-ng/actions/workflows/ci.yml)
+
 PokerBench-NG is a clean-room, local-first seed repo for evaluating AI and LLM poker play in No-Limit Texas Hold'em.
 
 The project is designed around credible measurement rather than flashy tournament rankings. The current local-first MVP seed implements:
