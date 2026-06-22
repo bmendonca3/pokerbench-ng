@@ -10,6 +10,7 @@ from pokerbench_ng.engine.legal_actions import LegalAction
 
 class CallCheckBot:
     name = "CallCheckBot"
+    version = "0.1.0"
 
     def choose(self, legal_actions: Sequence[LegalAction]) -> LegalAction:
         for preferred in ("check", "call"):

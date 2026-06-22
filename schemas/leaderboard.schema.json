@@ -1,13 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://pokerbench-ng.local/schemas/metrics.schema.json",
-  "title": "PokerBench-NG Metrics",
+  "$id": "https://pokerbench-ng.local/schemas/leaderboard.schema.json",
+  "title": "PokerBench-NG LeaderboardEntry",
   "type": "object",
-  "required": ["schema_version", "benchmark_version", "track", "summary", "reproducibility"],
+  "required": ["schema_version", "benchmark_version", "track_id", "agent_name", "primary_score", "summary", "reproducibility"],
   "properties": {
     "schema_version": { "const": "1.0" },
     "benchmark_version": { "type": "string" },
-    "track": { "type": "string" },
+    "track_id": { "type": "string" },
+    "agent_name": { "type": "string" },
+    "primary_score": { "type": "number" },
     "summary": { "type": "object" },
     "reproducibility": {
       "type": "object",

@@ -69,7 +69,7 @@ def legal_actions(state: GameState) -> list[LegalAction]:
     actions: list[LegalAction] = []
     if to_call == 0:
         actions.append(LegalAction("check"))
-        if actor.stack_bb > 0:
+        if actor.stack_bb > 0 and not _any_active_player_all_in(state):
             min_bet = state.current_bet_to_bb + state.min_raise_increment_bb
             actions.append(LegalAction("bet", min_to_bb=round(min_bet, 6), max_to_bb=max_to))
     else:
@@ -90,7 +90,10 @@ def apply_action(state: GameState, action: LegalAction) -> GameState:
     if action.type == "check":
         return _passive_action(state)
     if action.type == "call":
-        return _commit_to(state, state.current_bet_to_bb, aggressive=False)
+        actor = state.player(state.actor_seat)
+        to_call = max(0.0, state.current_bet_to_bb - actor.street_contribution_bb)
+        call_delta = min(to_call, actor.stack_bb)
+        return _commit_to(state, round(actor.street_contribution_bb + call_delta, 6), aggressive=False)
     if action.type in {"bet", "raise"}:
         amount_to = action.min_to_bb if action.amount_bb is None else action.amount_bb
         if amount_to is None:
@@ -202,8 +205,14 @@ def _street_balanced(state: GameState) -> bool:
     active = [player for player in state.players if player.status == "active"]
     if not active:
         return True
+    if _any_active_player_all_in(state):
+        return True
     contributions = {round(player.street_contribution_bb, 6) for player in active}
     return len(contributions) == 1
+
+
+def _any_active_player_all_in(state: GameState) -> bool:
+    return any(player.status == "active" and player.stack_bb == 0 for player in state.players)
 
 
 def _next_actor(state: GameState, pending: Iterable[str]) -> str:

@@ -1,9 +1,9 @@
 # PokerBench-NG Actionable Build Loop
 
 ## Current Status
-Status: active
-Updated: 2026-06-21 20:38 MST
-Next action: Start next ChatGPT Consultant brief item 2: expand the public toy static suite from 1 spot to at least 20 explicitly toy-labeled spots.
+Status: complete
+Updated: 2026-06-21 23:23 MST
+Next action: Optional follow-up only: monitor the pushed GitHub Actions run and continue with larger non-toy benchmark data design when desired.
 Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STATE.md`
 
 ## Contract
@@ -33,12 +33,38 @@ Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STAT
 
 ## Next Consultant Brief
 - [x] Add visible GitHub Actions gate and README badge after green run.
-- [ ] Expand public toy static suite from 1 spot to 20-50 hand-authored toy spots.
-- [ ] Add rollout opponent selection for `call_check`, `always_fold`, and `random_legal`.
-- [ ] Add JSON Schema validation for emitted metrics/run/leaderboard artifacts.
-- [ ] Add engine regression cases for all-in and raise-edge behavior.
+- [x] Expand public toy static suite from 1 spot to 20-50 hand-authored toy spots.
+- [x] Add rollout opponent selection for `call_check`, `always_fold`, and `random_legal`.
+- [x] Add JSON Schema validation for emitted metrics/run/leaderboard artifacts.
+- [x] Add engine regression cases for all-in and raise-edge behavior.
 
 ## Attempt Ledger
+### 2026-06-21 23:23 MST - remaining consultant brief completed
+- Result: Completed all remaining MVP/v1 seed brief items. Expanded the public static suite to 20 hand-authored toy spots, added rollout opponent selection for `call_check`, `always_fold`, and `random_legal`, added dependency-free schema validation for emitted metrics/run/leaderboard artifacts, and added engine regression coverage plus a fix for short-stack all-in calls and all-in street closure.
+- Evidence:
+  - Expanded static data: `src/pokerbench_ng/data/public_spots/dev.example.jsonl` now has 20 toy-labeled spots across preflop, flop, turn, and river.
+  - Opponent CLI checks passed:
+    - `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20 --opponent always_fold`
+    - `.venv/bin/pokerbench-ng eval-rollout --agent examples/agents/python_random_agent/agent.yaml --config configs/mvp_hunl_rollout.yaml --hands 20 --opponent random_legal`
+  - Static CLI check passed: `.venv/bin/pokerbench-ng eval-static --agent examples/agents/python_random_agent/agent.yaml --spots src/pokerbench_ng/data/public_spots/dev.example.jsonl`; generated `reports/static_1782109198730.metrics.json` with `static_spots: 20`.
+  - Refreshed canonical evidence from `.venv/bin/pokerbench-ng eval-suite --agent examples/agents/python_random_agent/agent.yaml --suite mvp_hunl`:
+    - `reports/static_1782109268591.metrics.json`
+    - `reports/rollout_1782109268893.metrics.json`
+    - `runs/rollout_1782109268893.json`
+  - Evidence snapshots validated against committed schemas:
+    - `docs/evidence/mvp-final/static.metrics.json`
+    - `docs/evidence/mvp-final/static.leaderboard.json`
+    - `docs/evidence/mvp-final/rollout.metrics.json`
+    - `docs/evidence/mvp-final/rollout.leaderboard.json`
+    - `docs/evidence/mvp-final/rollout.run.json`
+  - Focused tests passed:
+    - `.venv/bin/python -m unittest tests.unit.test_static_scorer tests.integration.test_cli` ran 14 tests and passed.
+    - `.venv/bin/python -m unittest tests.unit.test_transitions tests.property.test_engine_invariants` ran 13 tests and passed.
+  - Full regression pass: `.venv/bin/python -m unittest discover -s tests` ran 69 tests and passed.
+  - Compile pass: `.venv/bin/python -m compileall src tests`.
+  - Whitespace check: `git diff --check` passed.
+- Next action: Commit, run/initialize no-mistakes gate when possible, push, and verify GitHub Actions.
+
 ### 2026-06-21 20:38 MST - next brief item 1 visible CI completed
 - Result: ChatGPT Consultant reviewed the pushed hardening commit and reported no blocker before continuing. GitHub Actions was already present and passed for the hardening commit, so the README badge was added and pushed. The latest badge commit also completed CI successfully.
 - Evidence:

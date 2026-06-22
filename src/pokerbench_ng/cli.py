@@ -14,7 +14,9 @@ from pokerbench_ng.agents.protocol import AgentAction, AgentLegalAction, AgentRe
 from pokerbench_ng.agents.subprocess_agent import SubprocessAgentAdapter
 from pokerbench_ng.agents.validation import load_agent_manifest, validate_agent_manifest
 from pokerbench_ng import __version__
+from pokerbench_ng.bots.always_fold import AlwaysFoldBot
 from pokerbench_ng.bots.call_check import CallCheckBot
+from pokerbench_ng.bots.random_legal import RandomLegalBot
 from pokerbench_ng.reporting.json_report import write_json_report
 from pokerbench_ng.reporting.leaderboard import leaderboard_entry
 from pokerbench_ng.reporting.markdown_report import write_markdown_report
@@ -47,6 +49,12 @@ def build_parser() -> argparse.ArgumentParser:
     eval_rollout.add_argument("--agent", required=True, help="Path to agent manifest.")
     eval_rollout.add_argument("--config", required=True, help="Path to rollout config.")
     eval_rollout.add_argument("--hands", type=int, default=None, help="Override number of hands.")
+    eval_rollout.add_argument(
+        "--opponent",
+        choices=sorted(_OPPONENTS),
+        default="call_check",
+        help="Fixed baseline opponent.",
+    )
     eval_rollout.add_argument("--out-dir", default="reports", help="Metrics output directory.")
     eval_rollout.add_argument("--runs-dir", default="runs", help="Run-detail output directory.")
 
@@ -123,6 +131,7 @@ def main(argv: list[str] | None = None) -> int:
                 agent=args.agent,
                 config="configs/mvp_hunl_rollout.yaml",
                 hands=5,
+                opponent="call_check",
                 out_dir="reports",
                 runs_dir="runs",
             )
@@ -196,7 +205,10 @@ def _eval_rollout(args: argparse.Namespace) -> int:
             seeds = seeds + seed_schedule(requested_hands - len(seeds), start_seed=max(seeds or [0]) + 1)
     else:
         seeds = seed_schedule(requested_hands)
-    metrics = run_match(adapter, CallCheckBot(), seeds)
+    opponent = _opponent_from_name(args.opponent)
+    metrics = run_match(adapter, opponent, seeds)
+    opponent_metadata = _opponent_metadata(args.opponent, opponent)
+    metrics["opponent"] = opponent_metadata
     repro_inputs = {"config": Path(args.config)}
     if manifest_path and Path(manifest_path).exists():
         repro_inputs["seed_manifest"] = Path(manifest_path)
@@ -205,6 +217,7 @@ def _eval_rollout(args: argparse.Namespace) -> int:
         scoring_version="rollout_v1",
         inputs=repro_inputs,
         seed_schedule=seeds,
+        opponent=opponent_metadata,
     )
     run_id = _run_id("rollout")
     out_dir = Path(args.out_dir)
@@ -219,6 +232,7 @@ def _eval_rollout(args: argparse.Namespace) -> int:
         {
             "schema_version": "1.0",
             "run_id": run_id,
+            "opponent": opponent_metadata,
             "reproducibility": metrics["reproducibility"],
             "hands": metrics.get("hands_detail", []),
         },
@@ -255,11 +269,37 @@ def _agent_name(path: Path) -> str:
     return str(load_agent_manifest(path).get("agent", {}).get("name", path.stem))
 
 
+_OPPONENTS = {
+    "always_fold": AlwaysFoldBot,
+    "call_check": CallCheckBot,
+    "random_legal": RandomLegalBot,
+}
+
+
+def _opponent_from_name(name: str) -> object:
+    try:
+        factory = _OPPONENTS[name]
+    except KeyError as exc:
+        raise SystemExit(f"unknown opponent: {name}") from exc
+    if name == "random_legal":
+        return factory(seed=17)
+    return factory()
+
+
+def _opponent_metadata(name: str, opponent: object) -> dict[str, str]:
+    return {
+        "id": name,
+        "name": str(getattr(opponent, "name", name)),
+        "version": str(getattr(opponent, "version", __version__)),
+    }
+
+
 def _reproducibility_metadata(
     agent_manifest: Path,
     scoring_version: str,
     inputs: dict[str, Path],
     seed_schedule: list[int] | None = None,
+    opponent: dict[str, str] | None = None,
 ) -> dict[str, object]:
     metadata: dict[str, object] = {
         "benchmark_version": __version__,
@@ -275,6 +315,8 @@ def _reproducibility_metadata(
     if seed_schedule is not None:
         metadata["seed_schedule_hash"] = _text_sha256(",".join(str(seed) for seed in seed_schedule))
         metadata["seed_count"] = len(seed_schedule)
+    if opponent is not None:
+        metadata["opponent"] = opponent
     return metadata
 
 

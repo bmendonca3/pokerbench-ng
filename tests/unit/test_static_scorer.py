@@ -1,8 +1,13 @@
 import unittest
+from pathlib import Path
 
 from pokerbench_ng.agents.protocol import AgentAction, AgentResponse
 from pokerbench_ng.static.scorer import ev_loss, is_blunder
 from pokerbench_ng.static.scorer import EvaluatedResponse, evaluate_static_spots
+from pokerbench_ng.static.spots import load_jsonl
+
+
+DEV_SPOTS_PATH = Path("src/pokerbench_ng/data/public_spots/dev.example.jsonl")
 
 
 class StaticScorerTests(unittest.TestCase):
@@ -75,6 +80,13 @@ class StaticScorerTests(unittest.TestCase):
 
         self.assertEqual(metrics["summary"]["illegal_action_rate"], 1.0)
         self.assertEqual(metrics["details"][0]["classification"], "illegal")
+
+    def test_public_dev_spots_are_expanded_and_toy_labeled(self):
+        spots = list(load_jsonl(DEV_SPOTS_PATH))
+
+        self.assertGreaterEqual(len(spots), 20)
+        self.assertTrue(all(spot.get("tags", {}).get("toy") is True for spot in spots))
+        self.assertGreaterEqual(len({spot["street"] for spot in spots}), 4)
 
 
 if __name__ == "__main__":

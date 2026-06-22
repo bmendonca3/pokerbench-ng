@@ -29,3 +29,11 @@
 - [x] Make rollout seat assignment explicit and alternate submitted-agent SB/BB seats in smoke runs.
 - [x] Add reproducibility metadata to metrics, run JSON, and leaderboard entries.
 - [x] Align README and evidence wording with toy static spot and smoke rollout scope.
+
+## MVP/v1 Seed Follow-Up
+
+- [x] Add visible GitHub Actions gate and README badge after green run.
+- [x] Expand the public toy static suite from 1 spot to at least 20 hand-authored toy spots.
+- [x] Add rollout opponent selection for `call_check`, `always_fold`, and `random_legal`.
+- [x] Add committed schema validation for emitted metrics, run, and leaderboard artifacts.
+- [x] Add engine regression coverage for short-stack all-in calls, min/max raises, under-raises, bet/call closure, and river all-in showdown.

@@ -1,17 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://pokerbench-ng.local/schemas/metrics.schema.json",
-  "title": "PokerBench-NG Metrics",
+  "$id": "https://pokerbench-ng.local/schemas/run_record.schema.json",
+  "title": "PokerBench-NG RunRecord",
   "type": "object",
-  "required": ["schema_version", "benchmark_version", "track", "summary", "reproducibility"],
+  "required": ["schema_version", "run_id", "reproducibility", "hands"],
   "properties": {
     "schema_version": { "const": "1.0" },
-    "benchmark_version": { "type": "string" },
-    "track": { "type": "string" },
-    "summary": { "type": "object" },
+    "run_id": { "type": "string" },
+    "opponent": { "type": "object" },
     "reproducibility": {
       "type": "object",
-      "required": ["benchmark_version", "package_version", "scoring_version", "agent_manifest_path", "agent_manifest_hash", "inputs"],
+      "required": ["benchmark_version", "package_version", "scoring_version", "agent_manifest_path", "agent_manifest_hash", "inputs", "seed_schedule_hash", "seed_count"],
       "properties": {
         "benchmark_version": { "type": "string" },
         "package_version": { "type": "string" },
@@ -23,6 +22,10 @@
         "seed_count": { "type": "integer" },
         "opponent": { "type": "object" }
       }
+    },
+    "hands": {
+      "type": "array",
+      "items": { "type": "object" }
     }
   }
 }

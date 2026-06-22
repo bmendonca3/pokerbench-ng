@@ -1,8 +1,15 @@
 # Schemas
 
 PokerBench-NG artifacts use plain JSON-compatible structures with
-`schema_version: "1.0"`. The current seed repo keeps schemas in code and docs;
-future hardening can add formal JSON Schema files.
+`schema_version: "1.0"`. The current seed repo includes committed schema files
+for the artifacts emitted by the CLI:
+
+- `schemas/metrics.schema.json`
+- `schemas/run_record.schema.json`
+- `schemas/leaderboard.schema.json`
+
+Tests validate emitted artifacts with the dependency-free subset validator in
+`src/pokerbench_ng/reporting/schema_validation.py`.
 
 ## Reproducibility Metadata
 

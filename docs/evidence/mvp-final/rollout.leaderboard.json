@@ -16,6 +16,11 @@
         "sha256": "sha256:afc257ce3dc56e7af32e0c7d3dffbabcaac7123350cf1a11a9885d60caaa775f"
       }
     },
+    "opponent": {
+      "id": "call_check",
+      "name": "CallCheckBot",
+      "version": "0.1.0"
+    },
     "package_version": "0.1.0",
     "scoring_version": "rollout_v1",
     "seed_count": 5,

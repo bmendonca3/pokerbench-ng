@@ -5,7 +5,7 @@ These files are committed snapshots from the local-first MVP seed repo.
 They show that PokerBench-NG can:
 
 - validate the example Python random agent,
-- evaluate the toy public static spot,
+- evaluate the 20-spot hand-authored toy public static suite,
 - run a controlled HUNL smoke rollout against `CallCheckBot`,
 - emit metrics JSON, Markdown reports, leaderboard entries, and run JSON,
 - include reproducibility metadata in generated artifacts.

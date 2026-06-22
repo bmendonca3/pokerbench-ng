@@ -10,6 +10,7 @@ from pokerbench_ng.engine.legal_actions import LegalAction
 
 class AlwaysFoldBot:
     name = "AlwaysFoldBot"
+    version = "0.1.0"
 
     def choose(self, legal_actions: Sequence[LegalAction]) -> LegalAction:
         for action in legal_actions:

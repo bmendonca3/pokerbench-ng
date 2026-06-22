@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 from pokerbench_ng.cli import main
+from pokerbench_ng.reporting.schema_validation import validate_schema
 
 
 class CliTests(unittest.TestCase):
@@ -75,6 +76,34 @@ class CliTests(unittest.TestCase):
             leaderboard_data = json.loads(leaderboard.read_text(encoding="utf-8"))
             self.assertEqual(leaderboard_data["reproducibility"], metrics_data["reproducibility"])
 
+    def test_eval_rollout_accepts_fixed_opponents(self):
+        for opponent in ("always_fold", "random_legal"):
+            with self.subTest(opponent=opponent):
+                with tempfile.TemporaryDirectory() as report_dir, tempfile.TemporaryDirectory() as run_dir:
+                    status = main(
+                        [
+                            "eval-rollout",
+                            "--agent",
+                            "examples/agents/python_random_agent/agent.yaml",
+                            "--config",
+                            "configs/mvp_hunl_rollout.yaml",
+                            "--hands",
+                            "4",
+                            "--opponent",
+                            opponent,
+                            "--out-dir",
+                            report_dir,
+                            "--runs-dir",
+                            run_dir,
+                        ]
+                    )
+                    self.assertEqual(status, 0)
+                    metrics = json.loads(next(Path(report_dir).glob("*.metrics.json")).read_text(encoding="utf-8"))
+                    run_data = json.loads(next(Path(run_dir).glob("*.json")).read_text(encoding="utf-8"))
+                    self.assertEqual(metrics["opponent"]["id"], opponent)
+                    self.assertEqual(run_data["opponent"]["id"], opponent)
+                    self.assertEqual(metrics["reproducibility"]["opponent"]["id"], opponent)
+
     def test_report_and_leaderboard_commands(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             status = main(
@@ -92,6 +121,58 @@ class CliTests(unittest.TestCase):
             metrics = next(Path(tmpdir).glob("*.metrics.json"))
             self.assertEqual(main(["report", str(metrics)]), 0)
             self.assertEqual(main(["leaderboard", str(metrics), "--agent-name", "Example"]), 0)
+
+    def test_generated_artifacts_validate_against_committed_schemas(self):
+        with tempfile.TemporaryDirectory() as static_report_dir:
+            status = main(
+                [
+                    "eval-static",
+                    "--agent",
+                    "examples/agents/python_random_agent/agent.yaml",
+                    "--spots",
+                    "src/pokerbench_ng/data/public_spots/dev.example.jsonl",
+                    "--out-dir",
+                    static_report_dir,
+                ]
+            )
+            self.assertEqual(status, 0)
+            static_checks = [
+                (next(Path(static_report_dir).glob("*.metrics.json")), Path("schemas/metrics.schema.json")),
+                (next(Path(static_report_dir).glob("*.leaderboard.json")), Path("schemas/leaderboard.schema.json")),
+            ]
+            for artifact_path, schema_path in static_checks:
+                with self.subTest(artifact=artifact_path.name):
+                    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+                    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+                    self.assertEqual(validate_schema(artifact, schema), [])
+
+        with tempfile.TemporaryDirectory() as report_dir, tempfile.TemporaryDirectory() as run_dir:
+            status = main(
+                [
+                    "eval-rollout",
+                    "--agent",
+                    "examples/agents/python_random_agent/agent.yaml",
+                    "--config",
+                    "configs/mvp_hunl_rollout.yaml",
+                    "--hands",
+                    "4",
+                    "--out-dir",
+                    report_dir,
+                    "--runs-dir",
+                    run_dir,
+                ]
+            )
+            self.assertEqual(status, 0)
+            checks = [
+                (next(Path(report_dir).glob("*.metrics.json")), Path("schemas/metrics.schema.json")),
+                (next(Path(report_dir).glob("*.leaderboard.json")), Path("schemas/leaderboard.schema.json")),
+                (next(Path(run_dir).glob("*.json")), Path("schemas/run_record.schema.json")),
+            ]
+            for artifact_path, schema_path in checks:
+                with self.subTest(artifact=artifact_path.name):
+                    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+                    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+                    self.assertEqual(validate_schema(artifact, schema), [])
 
 
 if __name__ == "__main__":

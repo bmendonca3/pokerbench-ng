@@ -14,7 +14,7 @@ The first deliverable is a working MVP that can:
 
 ## Current Slice
 
-The local-first MVP seed repo is implemented. The repo can validate the example agent, run static EV-loss evaluation over the toy public spot, run a controlled HUNL smoke rollout against `CallCheckBot`, and emit metrics, Markdown, leaderboard, and run JSON artifacts with reproducibility metadata.
+The local-first MVP seed repo is implemented. The repo can validate the example agent, run static EV-loss evaluation over 20 hand-authored toy public spots, run controlled HUNL smoke rollouts against starter baseline opponents, and emit metrics, Markdown, leaderboard, and run JSON artifacts with reproducibility metadata.
 
 This is not a benchmark-quality release yet. The current artifacts prove evaluator plumbing and report generation. They do not establish leaderboard stability, solver-grade coverage, hidden evaluation integrity, or opponent robustness.
 

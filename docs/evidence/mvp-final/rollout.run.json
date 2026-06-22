@@ -441,6 +441,11 @@
       "terminal_reason": "showdown"
     }
   ],
+  "opponent": {
+    "id": "call_check",
+    "name": "CallCheckBot",
+    "version": "0.1.0"
+  },
   "reproducibility": {
     "agent_manifest_hash": "sha256:8df39d614e32cdc8c43ebbaa4bf45489d4317b61a15eb27984e2c81cf960f14e",
     "agent_manifest_path": "examples/agents/python_random_agent/agent.yaml",
@@ -455,11 +460,16 @@
         "sha256": "sha256:afc257ce3dc56e7af32e0c7d3dffbabcaac7123350cf1a11a9885d60caaa775f"
       }
     },
+    "opponent": {
+      "id": "call_check",
+      "name": "CallCheckBot",
+      "version": "0.1.0"
+    },
     "package_version": "0.1.0",
     "scoring_version": "rollout_v1",
     "seed_count": 5,
     "seed_schedule_hash": "sha256:b726eed184cea30d5a57fb645f77527e4232bec085e24e8d29a6e3b2c84c2db1"
   },
-  "run_id": "rollout_1782095499270",
+  "run_id": "rollout_1782109268893",
   "schema_version": "1.0"
 }

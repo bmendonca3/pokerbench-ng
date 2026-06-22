@@ -11,6 +11,7 @@ from pokerbench_ng.engine.legal_actions import LegalAction
 
 class RandomLegalBot:
     name = "RandomLegalBot"
+    version = "0.1.0"
 
     def __init__(self, seed: int = 0) -> None:
         self._rng = random.Random(seed)

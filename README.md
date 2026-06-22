@@ -6,7 +6,7 @@ PokerBench-NG is a clean-room, local-first seed repo for evaluating AI and LLM p
 
 The project is designed around credible measurement rather than flashy tournament rankings. The current local-first MVP seed implements:
 
-- static EV-loss evaluation over a toy public spot,
+- static EV-loss evaluation over 20 hand-authored toy public spots,
 - controlled heads-up no-limit hold'em smoke rollouts against `CallCheckBot`,
 - strict JSON agent protocol,
 - separate model-only, agent, and tool-assisted tracks,
@@ -31,6 +31,11 @@ pokerbench-ng eval-rollout \
   --agent examples/agents/python_random_agent/agent.yaml \
   --config configs/mvp_hunl_rollout.yaml \
   --hands 20
+pokerbench-ng eval-rollout \
+  --agent examples/agents/python_random_agent/agent.yaml \
+  --config configs/mvp_hunl_rollout.yaml \
+  --hands 20 \
+  --opponent random_legal
 python3 -m unittest discover -s tests
 ```
 
