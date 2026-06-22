@@ -1,9 +1,9 @@
 # PokerBench-NG Actionable Build Loop
 
 ## Current Status
-Status: complete
-Updated: 2026-06-21 20:03 MST
-Next action: Optional publication step: commit and push the completed hardening changes if the user wants the public GitHub repo updated.
+Status: active
+Updated: 2026-06-21 20:38 MST
+Next action: Start next ChatGPT Consultant brief item 2: expand the public toy static suite from 1 spot to at least 20 explicitly toy-labeled spots.
 Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STATE.md`
 
 ## Contract
@@ -31,7 +31,26 @@ Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STAT
 - [x] Item 5: Align README and evidence language with toy/static smoke scope.
 - [x] Previous MVP seed repo gate completed and pushed.
 
+## Next Consultant Brief
+- [x] Add visible GitHub Actions gate and README badge after green run.
+- [ ] Expand public toy static suite from 1 spot to 20-50 hand-authored toy spots.
+- [ ] Add rollout opponent selection for `call_check`, `always_fold`, and `random_legal`.
+- [ ] Add JSON Schema validation for emitted metrics/run/leaderboard artifacts.
+- [ ] Add engine regression cases for all-in and raise-edge behavior.
+
 ## Attempt Ledger
+### 2026-06-21 20:38 MST - next brief item 1 visible CI completed
+- Result: ChatGPT Consultant reviewed the pushed hardening commit and reported no blocker before continuing. GitHub Actions was already present and passed for the hardening commit, so the README badge was added and pushed. The latest badge commit also completed CI successfully.
+- Evidence:
+  - Consultant thread: `https://chatgpt.com/c/6a383a82-c998-832f-9ee4-5e6a5db3930f`
+  - Hardening commit: `45224a5cc7aa76e8b2e5d1af2adc581e51cd6dcf`
+  - README badge commit: `022966aeb7790c1f2d6008521e6db87e054894fc`
+  - GitHub Actions run for badge commit: `https://github.com/bmendonca3/pokerbench-ng/actions/runs/27926045591`, conclusion `success`.
+  - Local check before badge push: `git diff --check` passed.
+  - Local regression before badge push: `.venv/bin/python -m unittest discover -s tests` ran 61 tests and passed.
+  - no-mistakes gate status: `no-mistakes axi run` remains blocked because the repo is not initialized for no-mistakes (`repo not initialized (run 'no-mistakes init' first)`); local verification and GitHub Actions were used as fallback.
+- Next action: Expand `src/pokerbench_ng/data/public_spots/dev.example.jsonl` to at least 20 explicitly toy-labeled spots and refresh static evidence.
+
 ### 2026-06-21 20:03 MST - item 5 README and evidence alignment completed
 - Result: README and implementation brief now call the project a local-first MVP seed repo, describe the static dataset as a toy public spot, describe rollout as a smoke rollout against `CallCheckBot`, and explicitly avoid benchmark-quality release claims. Refreshed committed evidence snapshots from the latest verified run so they include reproducibility metadata and explicit seat assignments. Added `docs/evidence/mvp-final/README.md` to state what the snapshots prove and do not prove.
 - Evidence:
