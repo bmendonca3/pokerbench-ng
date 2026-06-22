@@ -3,7 +3,7 @@
 ## Current Status
 Status: complete
 Updated: 2026-06-21 23:23 MST
-Next action: Optional follow-up only: monitor the pushed GitHub Actions run and continue with larger non-toy benchmark data design when desired.
+Next action: Optional follow-up only: continue with larger non-toy benchmark data design when desired.
 Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STATE.md`
 
 ## Contract
@@ -63,7 +63,11 @@ Current source of truth: `/Users/brianmendonca/Documents/pokerbench-ng/GOAL_STAT
   - Full regression pass: `.venv/bin/python -m unittest discover -s tests` ran 69 tests and passed.
   - Compile pass: `.venv/bin/python -m compileall src tests`.
   - Whitespace check: `git diff --check` passed.
-- Next action: Commit, run/initialize no-mistakes gate when possible, push, and verify GitHub Actions.
+- Publication:
+  - Commit pushed to `main`: `91a5f3d1c9e695946a9f02d14ad0af8b815b0e02`.
+  - GitHub Actions run passed: `https://github.com/bmendonca3/pokerbench-ng/actions/runs/27933837316`.
+  - no-mistakes was initialized successfully and added the local `no-mistakes` remote. AXI validation did not complete: it refused `main` because it is the default branch, then failed on feature branch `validate-seed-follow-up` with `no run started for "validate-seed-follow-up": no previous run for branch validate-seed-follow-up`; `git push no-mistakes validate-seed-follow-up` reported `Everything up-to-date` but no run appeared. Local verification plus GitHub Actions were used as the final gate.
+- Next action: Optional only; all requested remaining items are complete.
 
 ### 2026-06-21 20:38 MST - next brief item 1 visible CI completed
 - Result: ChatGPT Consultant reviewed the pushed hardening commit and reported no blocker before continuing. GitHub Actions was already present and passed for the hardening commit, so the README badge was added and pushed. The latest badge commit also completed CI successfully.
